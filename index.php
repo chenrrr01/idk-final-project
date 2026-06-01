@@ -8,6 +8,10 @@ if (empty($_COOKIE['uid'])) {
     $uid = $_COOKIE['uid'];
 }
 
+// Insert user if not exists
+$stmt = $pdo->prepare("INSERT IGNORE INTO users (cookie_id) VALUES (?)");
+$stmt->execute([$uid]);
+
 $posts = $pdo->query("SELECT content, created_at FROM posts WHERE created_at >= NOW() - INTERVAL 12 HOUR ORDER BY created_at DESC")->fetchAll();
 ?>
 <!DOCTYPE html>
@@ -26,7 +30,7 @@ $posts = $pdo->query("SELECT content, created_at FROM posts WHERE created_at >= 
 </head>
 <body>
     <h1>Random Thoughts</h1>
-    <nav><a href="index.php">Wall</a><a href="my_posts.php">My posts</a></nav>
+    <nav><a href="index.php">Wall</a><a href="my_posts.php">My posts</a><a href="members.php">Members</a></nav>
 
     <form action="post.php" method="POST">
         <textarea name="content" placeholder="What's on your mind?" required></textarea>

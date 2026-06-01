@@ -14,6 +14,11 @@ if ($content === '') {
     exit;
 }
 
+// Insert user if not exists
+$stmt = $pdo->prepare("INSERT IGNORE INTO users (cookie_id) VALUES (?)");
+$stmt->execute([$uid]);
+
+// Insert post
 $stmt = $pdo->prepare("INSERT INTO posts (content, cookie_id) VALUES (?, ?)");
 $stmt->execute([$content, $uid]);
 
