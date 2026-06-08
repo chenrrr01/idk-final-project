@@ -13,6 +13,12 @@ $stmt = $pdo->prepare("INSERT IGNORE INTO users (cookie_id) VALUES (?)");
 $stmt->execute([$uid]);
 
 $posts = $pdo->query("SELECT content, created_at FROM posts WHERE created_at >= NOW() - INTERVAL 12 HOUR ORDER BY created_at DESC")->fetchAll();
+
+function linkify($text) {
+    $text = htmlspecialchars($text);
+    $pattern = '/(https?:\/\/[^\s]+)/';
+    return preg_replace($pattern, '<a href="$1" target="_blank">$1</a>', $text);
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -39,7 +45,7 @@ $posts = $pdo->query("SELECT content, created_at FROM posts WHERE created_at >= 
 
     <?php foreach ($posts as $p): ?>
         <div class="post">
-            <p><?= htmlspecialchars($p['content']) ?></p>
+            <p><?= linkify($p['content']) ?></p>
             <time><?= $p['created_at'] ?></time>
         </div>
     <?php endforeach; ?>
